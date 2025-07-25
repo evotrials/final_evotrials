@@ -1,0 +1,36 @@
+{
+  "version": 2,
+  "builds": [
+    { 
+      "src": "server/index.ts",
+      "use": "@vercel/node",
+      "config": { 
+        "includeFiles": ["server/**/*"] 
+      }
+    },
+    { 
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/client",
+        "buildCommand": "npm run build"
+      }
+    }
+  ],
+  "routes": [
+    { 
+      "src": "/api/(.*)", 
+      "dest": "server/index.ts",
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
+    },
+    { 
+      "src": "/(.*)", 
+      "dest": "client",
+      "headers": {
+        "Cache-Control": "s-maxage=3600"
+      }
+    }
+  ]
+}
